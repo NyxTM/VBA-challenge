@@ -1,0 +1,112 @@
+Sub stock()
+    Dim stock As Worksheet
+    Application.ScreenUpdating = False
+    For Each stock In Worksheets
+        stock.Select
+        Call RunCode
+    Next
+    Application.ScreenUpdating = True
+End Sub
+Sub RunCode()
+
+    Dim Open1 As Double
+    Dim Close1 As Double
+    Dim Volume As Double
+    Dim i As Double
+    Dim j As Double
+    Dim date1 As String
+    
+    Open1 = Cells(2, 3).Value
+    Close1 = 0
+    Volume = 0
+    i = 2
+    j = 2
+    Cells(2, 9).Value = Cells(2, 1).Value
+    
+    Do While Cells(i, 1).Value <> ""
+    
+        date1 = Cells(i, 2).Value
+    
+        If Cells(j, 9).Value = Cells(i, 1).Value Then
+        
+            Volume = Volume + Cells(i, 7).Value
+            
+            If Right(date1, 4) = "1231" Then
+            
+            Close1 = Cells(i, 6).Value
+            
+            Cells(j, 10).Value = Close1 - Open1
+            
+            
+            If Cells(j, 10).Value < 0 Then
+                Cells(j, 10).Interior.ColorIndex = 3
+                
+            Else
+                Cells(j, 10).Interior.ColorIndex = 4
+                    
+            End If
+            
+            
+            Cells(j, 11).Value = (Close1 - Open1) / Open1
+            Cells(j, 11).NumberFormatLocal = "0.00%"
+            
+            Cells(j, 12).Value = Volume
+            
+            End If
+            
+        End If
+    
+        If Cells(j, 9).Value <> Cells(i, 1).Value Then
+            
+            Cells(j + 1, 9).Value = Cells(i, 1).Value
+             
+            Open1 = Cells(i, 3).Value
+            Close1 = 0
+            Volume = Cells(i, 7)
+            
+            j = j + 1
+        
+        End If
+        
+    i = i + 1
+    
+    Loop
+    
+Dim Z As Double
+Dim GreatestIncrease As Double
+Dim GreatestDecrease As Double
+Dim GreatestVolume As Double
+
+GreatestIncrease = Cells(2, 11)
+GreatestDecrease = Cells(2, 11)
+GreatestVolume = Cells(2, 12)
+
+For Z = 3 To j - 1
+
+If Cells(Z, 11) >= GreatestIncrease Then
+GreatestIncrease = Cells(Z, 11)
+Cells(2, 16).Value = Cells(Z, 9)
+
+End If
+
+If Cells(Z, 11) < GreatestDecrease Then
+GreatestDecrease = Cells(Z, 11)
+Cells(3, 16).Value = Cells(Z, 9)
+
+End If
+
+If Cells(Z, 12) >= GreatestVolume Then
+GreatestVolume = Cells(Z, 12)
+Cells(4, 16).Value = Cells(Z, 9)
+
+End If
+
+Next Z
+
+Cells(2, 17).Value = GreatestIncrease
+Cells(3, 17).Value = GreatestDecrease
+Cells(4, 17).Value = GreatestVolume
+Cells(2, 17).NumberFormatLocal = "0.00%"
+Cells(3, 17).NumberFormatLocal = "0.00%"
+    
+End Sub
